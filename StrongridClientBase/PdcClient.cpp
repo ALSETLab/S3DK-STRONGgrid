@@ -1,7 +1,7 @@
 /*
 *  PdcClient.cpp
 *
-*  Copyright (C) 2016 SmarTS Lab
+*  Copyright (C) 2017 Luigi Vanfretti
 *
 *  This file is part of StrongridDLL.
 *
@@ -37,7 +37,7 @@ PdcClient::PdcClient( std::string ipAddress, int port, int pdcIdCode )
 	m_tcpClient = new TcpClient(ipAddress,port);
 	m_buffer = new char[BUFFER_SIZE];
 	m_pdcIdCode = pdcIdCode;
-	
+
 	m_pdcCfgVer2_isAvailable = false;
 	m_pdcCfgVer3_isAvailable = false;
 	m_headerFrame_isAvailable = false;
@@ -117,17 +117,17 @@ void PdcClient::ReadConfiguration(int timeoutMs)
 	m_tcpClient->Send(m_buffer, offset );
 
 
-	// Read configuration frame	
+	// Read configuration frame
 	ProcessInputStreamUntilTargetFrameType(C37118HdrFrameType::CONFIGURATION_FRAME_2, timeoutMs);
-		
-	
+
+
 }
 void PdcClient::HandleConfigurationFrame()
 {
 	// Interpret config frame
 	C37118PdcConfiguration pdcConfig;
 	m_pdcConfig = C37118Protocol::ReadConfigurationFrame(m_buffer,BUFFER_SIZE);
-	m_datadecodeInfo = C37118Protocol::CreateDecodeInfoByPdcConfig(m_pdcConfig);			
+	m_datadecodeInfo = C37118Protocol::CreateDecodeInfoByPdcConfig(m_pdcConfig);
 	m_pdcCfgVer2_isAvailable = true;
 }
 
@@ -142,7 +142,7 @@ void PdcClient::ReadConfigurationVer3(int timeoutMs)
 	m_tcpClient->Send(m_buffer, offset );
 
 	// Read config frame 3
-	ProcessInputStreamUntilTargetFrameType( C37118HdrFrameType::CONFIGURATION_FRAME_3, timeoutMs );	
+	ProcessInputStreamUntilTargetFrameType( C37118HdrFrameType::CONFIGURATION_FRAME_3, timeoutMs );
 }
 void PdcClient::HandleConfigurationFrame_Ver3()
 {
@@ -171,7 +171,7 @@ void PdcClient::ProcessInputStreamUntilTargetFrameType(C37118HdrFrameType target
 			HandleConfigurationFrame_Ver3();
 		else if( frameHeader.Sync.FrameType == C37118HdrFrameType::DATA_FRAME )
 			HandleDataFrame();
-				
+
 		// Stop processing the inputstream once the target messagetype has been handled.
 		if( frameHeader.Sync.FrameType == targetType) break;
 	}
@@ -194,7 +194,7 @@ void PdcClient::HandleHeaderMessage()
 {
 	// Interpret config frame
 	int offset = 0;
-	m_headerFrame = C37118Protocol::ReadHeaderFrame(m_buffer,BUFFER_SIZE,&offset);	
+	m_headerFrame = C37118Protocol::ReadHeaderFrame(m_buffer,BUFFER_SIZE,&offset);
 	m_headerFrame_isAvailable = true;
 }
 
@@ -231,7 +231,7 @@ void PdcClient::ReadDataFrame(int timeoutMs)
 
 	// Interpret dataframe
 	int offset = 0;
-	m_currDataFrame = C37118Protocol::ReadDataFrame(m_buffer,BUFFER_SIZE, &m_datadecodeInfo, &offset);	
+	m_currDataFrame = C37118Protocol::ReadDataFrame(m_buffer,BUFFER_SIZE, &m_datadecodeInfo, &offset);
 	m_pdcDataFrame_isAvailable = true;
 }
 
@@ -264,4 +264,3 @@ C37118PdcDataFrame PdcClient::GetPdcDataFrame()
 	if( m_pdcDataFrame_isAvailable == false ) throw Exception("Dataframe has not been read");
 	return m_currDataFrame;
 }
-

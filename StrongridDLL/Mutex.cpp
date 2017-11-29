@@ -1,7 +1,7 @@
 /*
 *  Mutex.cpp
 *
-*  Copyright (C) 2016 SmarTS Lab
+*  Copyright (C) 2017 Luigi Vanfretti
 *
 *  This file is part of StrongridDLL.
 *
@@ -26,7 +26,7 @@ using namespace stronggriddll;
 
 Mutex::Mutex()
 {
-	m_hMutex = CreateMutex( 
+	m_hMutex = CreateMutex(
         NULL,              // default security attributes
         FALSE,             // initially not owned
         NULL);             // unnamed mutex

@@ -1,7 +1,7 @@
 /*
 *  C37118Protocol.h
 *
-*  Copyright (C) 2016 SmarTS Lab
+*  Copyright (C) 2017 Luigi Vanfretti
 *
 *  This file is part of StrongridDLL.
 *
@@ -38,7 +38,7 @@ namespace strongridbase
 		CONFIGURATION_FRAME_3 = 5,
 		COMMAND_FRAME = 4
 	};
-	
+
 	struct C37118SyncField
 	{
 		char LeadIn; // Should be 0xAA
@@ -50,7 +50,7 @@ namespace strongridbase
 	{
 		uint32_t FractionOfSecond;
 		uint8_t TimeQuality;
-		
+
 		static C37118FracSec Create( uint32_t fracSec, int leapSecOffset, bool leapSecPending, int cloclErrorLevel );
 		void GetParsedQuality( int* outLeapSecOffset, bool* outLeapSecPending, float* outTimeClockMaxErrorSec, bool* outIsRealiable ) const;
 	};
@@ -102,7 +102,7 @@ namespace strongridbase
 		// 1 = RMS of analog input
 		// 2 = peak of analog input
 		// 5-64 = reserved
-		int Type_X; 
+		int Type_X;
 		int32_t AnalogScalar;
 	};
 
@@ -169,7 +169,7 @@ namespace strongridbase
 		// Group 1
 		uint16_t PhasorBits; // Skip impl for now..
 		uint8_t VoltOrCurrent; // 0 = voltage, 1 = current
-		PhasorComponentCodeEnum PhasorComponentCode; 
+		PhasorComponentCodeEnum PhasorComponentCode;
 
 		// Group 2+3
 		float ScaleFactorOne_Y; // Scales primary volt/amperes
@@ -193,7 +193,7 @@ namespace strongridbase
 	{
 		std::string StationName;
 		uint16_t IdCode;
-		C37118PmuFormat DataFormat; 
+		C37118PmuFormat DataFormat;
 		std::vector<std::string> phasorChnNames;
 		std::vector<std::string> analogChnNames;
 		std::vector<std::string> digitalChnNames;
@@ -204,7 +204,7 @@ namespace strongridbase
 		uint16_t ConfChangeCnt;
 	};
 
-	
+
 	struct C37118FrameHeader
 	{
 		C37118SyncField Sync;
@@ -241,7 +241,7 @@ namespace strongridbase
 		std::string StationName;
 		uint16_t IdCode;
 		char GlobalPmuId[16];
-		C37118PmuFormat DataFormat; 
+		C37118PmuFormat DataFormat;
 		std::vector<std::string> phasorChnNames;
 		std::vector<std::string> analogChnNames;
 		std::vector<std::string> digitalChnNames;
@@ -272,7 +272,7 @@ namespace strongridbase
 		C37118ContIdx(uint16_t rawval);
 		uint16_t m_raw;
 	};
-	
+
 	struct C37118PdcConfiguration_Ver3
 	{
 		C37118FrameHeader HeaderCommon;
@@ -321,7 +321,7 @@ namespace strongridbase
 	{
 	public:
 		static C37118PmuDataFramePhasorRealImag CreateByRealImag(int16_t real, int16_t imag);
-		static C37118PmuDataFramePhasorRealImag CreateByRealImag(float real, float imag);		
+		static C37118PmuDataFramePhasorRealImag CreateByRealImag(float real, float imag);
 		static C37118PmuDataFramePhasorRealImag CreateByPolarMag(uint16_t magnitude, int16_t angleRad); // angle assumed to be in "radians * 10^4"
 		static C37118PmuDataFramePhasorRealImag CreateByPolarMag(float magnitude, float angleRad);
 
@@ -338,7 +338,7 @@ namespace strongridbase
 	{
 	public:
 		static C37118PmuDataFrameAnalog CreateByInt16(int16_t value);
-		static C37118PmuDataFrameAnalog CreateByFloat(float value);		
+		static C37118PmuDataFrameAnalog CreateByFloat(float value);
 
 		float getValueAsFloat() const;
 		int16_t getValueAsInt16() const;
@@ -351,7 +351,7 @@ namespace strongridbase
 	{
 	public:
 		static C37118PmuDataFrameDigitalHelper CreateByBoolArray(std::vector<bool> digBits);
-		static C37118PmuDataFrameDigitalHelper CreateByUint16Arr(std::vector<uint16_t> digWordArray);		
+		static C37118PmuDataFrameDigitalHelper CreateByUint16Arr(std::vector<uint16_t> digWordArray);
 		void PushDigWord( uint16_t word);
 		void PushDigValue( bool bit );
 
@@ -402,7 +402,7 @@ namespace strongridbase
 	struct C37118PdcHeaderFrame
 	{
 		C37118FrameHeader Header;
-		std::string HeaderMessage;		
+		std::string HeaderMessage;
 		uint16_t FooterCrc16;
 	};
 
@@ -412,7 +412,7 @@ namespace strongridbase
 		int numPhasors;
 		int numAnalogs;
 		int numDigitals;
-		C37118PmuFormat DataFormat; 
+		C37118PmuFormat DataFormat;
 	};
 
 	struct C37118PdcDataDecodeInfo
@@ -439,7 +439,7 @@ namespace strongridbase
 		static void WriteC37118PmuFormat(char* data, const C37118PmuFormat* pmuFormat, int* offset );
 		static void WriteC37118PhasorUnit(char* data,const C37118PhasorUnit* pmuFormat , int* offset);
 		static void WriteC37118AnalogUnit(char* data,  const C37118AnalogUnit* pmuFormat, int* offset );
-		static void WriteC37118DigitalUnit(char* data, const C37118DigitalUnit* pmuFormat, int* offset );	
+		static void WriteC37118DigitalUnit(char* data, const C37118DigitalUnit* pmuFormat, int* offset );
 		static void WriteC37118PhasorScale_Ver3(char* data, const C37118PhasorScale_Ver3* phScale, int* offset);
 		static void WriteC37118AnalogScale_Ver3(char* data, const C37118AnalogScale_Ver3* phScale, int* offset);
 

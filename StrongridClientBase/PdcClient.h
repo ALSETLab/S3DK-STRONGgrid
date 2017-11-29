@@ -1,7 +1,7 @@
 /*
 *  PdcClient.h
 *
-*  Copyright (C) 2016 SmarTS Lab
+*  Copyright (C) 2017 Luigi Vanfretti
 *
 *  This file is part of StrongridDLL.
 *
@@ -81,7 +81,7 @@ namespace strongridclientbase
 		C37118PdcConfiguration m_pdcConfig;
 		C37118PdcConfiguration_Ver3 m_pdcConfigVer3;
 		C37118PdcDataDecodeInfo m_datadecodeInfo;
-		C37118PdcHeaderFrame m_headerFrame;		
+		C37118PdcHeaderFrame m_headerFrame;
 		C37118PdcDataFrame m_currDataFrame;
 	};
 }

@@ -1,7 +1,7 @@
 /*
 *  Mutex.h
 *
-*  Copyright (C) 2016 SmarTS Lab
+*  Copyright (C) 2017 Luigi Vanfretti
 *
 *  This file is part of StrongridDLL.
 *
@@ -25,7 +25,7 @@
 #include <Windows.h>
 
 namespace stronggriddll
-{	
+{
 	class Mutex
 	{
 	public:
@@ -36,7 +36,7 @@ namespace stronggriddll
 		void Exit();
 
 	private:
-		HANDLE m_hMutex; 
+		HANDLE m_hMutex;
 	};
 
 	class MutexFragment

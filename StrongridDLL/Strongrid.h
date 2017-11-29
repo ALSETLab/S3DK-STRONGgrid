@@ -1,7 +1,7 @@
 /*
 *  Strongrid.h
 *
-*  Copyright (C) 2016 SmarTS Lab
+*  Copyright (C) 2017 Luigi Vanfretti
 *
 *  This file is part of StrongridDLL.
 *
@@ -37,7 +37,7 @@ typedef unsigned long long uint64_t;
 #define STRONGRIDIEEEC37118DLL_API extern "C" __declspec(dllexport)
 
 
-typedef struct 
+typedef struct
 {
 	int32_t LeapSecCorrection; // +1 for 1 second added, and -1 for subtract. 0 means no change
 	BOOL8_t LeapSecPending; // Early warning of pending leap second
@@ -45,7 +45,7 @@ typedef struct
 	float ClockErrorSec;
 } TimeStatus;
 
-typedef struct 
+typedef struct
 {
 	int16_t Year;
 	int16_t Month;
@@ -56,12 +56,12 @@ typedef struct
 	int16_t Ms;
 } ParsedTimestamp;
 
-typedef struct 
+typedef struct
 {
 	TimeStatus TimeQuality;
 	ParsedTimestamp Timestamp;
 	double SecondOfCentury;
-	
+
 	float FramesPerSecond;
 	int numberOfPMUs;
 
@@ -69,7 +69,7 @@ typedef struct
 
 
 typedef struct
-{	
+{
 	int32_t pmuid;
 	char* stationname;
 	float nominalFrequency;
@@ -80,7 +80,7 @@ typedef struct
 }pmuConfig;
 
 typedef struct
-{	
+{
 	int32_t pmuid;
 	float nominalFrequency;
 	int32_t numberOfPhasors;
@@ -90,18 +90,18 @@ typedef struct
 }noArraysPmuConfig;
 
 typedef struct
-{	
+{
 	int32_t pmuid;
 	char* stationname;
 	float nominalFrequency;
 	int32_t numberOfPhasors;
 	int32_t numberOfAnalog;
 	int32_t numberOfDigital;
-		
+
 	float POS_LAT;
 	float POS_LON;
 	float POS_ELEV;
-	uint8_t SVC_CLASS;	
+	uint8_t SVC_CLASS;
 	int32_t PhasorMeasurementWindow;
 	int32_t PhasorMeasurementGroupDelayMs;
 	char globalPmuId[16];
@@ -114,7 +114,7 @@ typedef struct PmuStatus
 	// Data error:
 	//  - 0 = good measurement data - no errors
 	//  - 1 = PMU error. No information about data
-	//  - 2 = PMU in test mode 
+	//  - 2 = PMU in test mode
 	//  - 3 = PMU error (no not use values)
 	uint8_t dataErrorCode;
 
@@ -124,7 +124,7 @@ typedef struct PmuStatus
 	// Data sorting - true=sort by timestamp / false=sort by arrival
 	BOOL8_t pmuDataSortingFlag;
 
-	// PMU trigger detected 
+	// PMU trigger detected
 	BOOL8_t pmuTriggerFlag;
 
 	// Configuration change detected
@@ -163,8 +163,8 @@ typedef struct PmuStatus
 	uint8_t triggerReasonCode;
 };
 
-typedef struct 
-{	
+typedef struct
+{
 	TimeStatus TimeQuality;
 	ParsedTimestamp Timestamp;
 	double SecondOfCentury;
@@ -172,8 +172,8 @@ typedef struct
 
 }pdcDataFrame ;
 
-typedef struct 
-{	
+typedef struct
+{
 	float			frequency;
 	float			deltaFrequency;
 
@@ -186,17 +186,17 @@ typedef struct
 
 	uint16_t		DigitalArrayLength;
 	BOOL8_t*		digitalValueArr;
-	
+
 }pmuDataFrame ;
 
-typedef struct 
-{	
+typedef struct
+{
 	float			frequency;
 	float			deltaFrequency;
-	
+
 }noArraysPmuDataFrame;
 
-typedef struct 
+typedef struct
 {
 	char*		    name;  // INPUT ARRAY MUST BE >= 256 in length
 	uint8_t			type; // 0 == voltage, 1 == current
@@ -206,7 +206,7 @@ typedef struct
 
 }phasorConfig;
 
-typedef struct 
+typedef struct
 {
 	uint8_t			type; // 0 == voltage, 1 == current
 	uint8_t			format; // 0 = rectangular, 1 = polar | NOTE: currently this version is always in 'rectangular'
@@ -215,7 +215,7 @@ typedef struct
 
 }noArraysPhasorConfig;
 
-typedef struct 
+typedef struct
 {
 	char*		    name;  // INPUT ARRAY MUST BE >= 256 in length
 	uint8_t			type; // 0 == voltage, 1 == current
@@ -226,15 +226,15 @@ typedef struct
 
 }phasorConfig_Ver3;
 
-typedef struct 
-{	
+typedef struct
+{
 	char*		    name;  // INPUT ARRAY MUST BE >= 256 in length
 
 	// 0 = Single point on wave
 	// 1 = RMS of analog input
 	// 2 = peak of analog input
 	// 5-64 = reserved
-	int Type; 
+	int Type;
 
 	// Scaling information
 	BOOL8_t			dataIsScaled;  // True if already scaled - false if not
@@ -242,13 +242,13 @@ typedef struct
 
 }analogConfig;
 
-typedef struct 
-{	
+typedef struct
+{
 	// 0 = Single point on wave
 	// 1 = RMS of analog input
 	// 2 = peak of analog input
 	// 5-64 = reserved
-	int Type; 
+	int Type;
 
 	// Scaling information
 	BOOL8_t			dataIsScaled;  // True if already scaled - false if not
@@ -256,8 +256,8 @@ typedef struct
 
 }noArraysAnalogConfig;
 
-typedef struct 
-{	
+typedef struct
+{
 	char*		    name;  // INPUT ARRAY MUST BE >= 256 in length
 
 	BOOL8_t			dataIsScaled;  // True if already scaled - false if not
@@ -266,14 +266,14 @@ typedef struct
 
 }analogConfig_Ver3;
 
-typedef struct 
+typedef struct
 {
 	char*		name;	   // INPUT ARRAY MUST BE >= 256 in length
 	BOOL8_t		normalBit; // "Normal" state of bit
 	BOOL8_t		isValidBit;  // Bit is valid
 }digitalConfig;
 
-typedef struct 
+typedef struct
 {
 	BOOL8_t		normalBit; // "Normal" state of bit
 	BOOL8_t		isValidBit;  // Bit is valid
@@ -297,8 +297,8 @@ STRONGRIDIEEEC37118DLL_API int __cdecl readNextFrame( int32_t timeoutMs, int32_t
 
 STRONGRIDIEEEC37118DLL_API int __cdecl dllshutdown();
 
-// Fills in "outPseudoPdcIdArr" with pseudoPdcId's which have data waiting. 
-//  pseudoPdcIdArrayLength = The length of the input array 
+// Fills in "outPseudoPdcIdArr" with pseudoPdcId's which have data waiting.
+//  pseudoPdcIdArrayLength = The length of the input array
 //  outPseudoPdcIdArr = the input array where the pseudo PDC id's are placed
 //  outNumPdcWithData = the total number of PDC's with data waiting
 STRONGRIDIEEEC37118DLL_API int __cdecl pollPdcWithDataWaiting( int pseudoPdcIdArrayLength, int32_t* outPseudoPdcIdArr, int32_t* outNumPdcWithData, int pollTimeoutMs );

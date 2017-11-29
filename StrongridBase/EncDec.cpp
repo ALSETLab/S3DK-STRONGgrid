@@ -1,7 +1,7 @@
 /*
 *  EncDec.cpp
 *
-*  Copyright (C) 2016 SmarTS Lab
+*  Copyright (C) 2017 Luigi Vanfretti
 *
 *  This file is part of StrongridDLL.
 *
@@ -26,7 +26,7 @@
 using namespace strongridbase;
 
 int32_t EncDec::get_S32( char* data, int* offset )
-{	
+{
 	int32_t tmp = *((int32_t*)(data + *offset));
 	*offset += sizeof(int32_t);
 	return tmp;

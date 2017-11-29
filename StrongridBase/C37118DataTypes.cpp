@@ -1,7 +1,7 @@
 /*
 *  C37118DataTypes.cpp
 *
-*  Copyright (C) 2016 SmarTS Lab
+*  Copyright (C) 2017 Luigi Vanfretti
 *
 *  This file is part of StrongridDLL.
 *
@@ -46,7 +46,7 @@ C37118FracSec C37118FracSec::Create( uint32_t fracSec, int leapSecOffset, bool l
 
 	// Set quality indicator
 	out.TimeQuality |= (0x0F & clockErrorLevel);
-		
+
 	return out;
 }
 
@@ -59,7 +59,7 @@ void C37118FracSec::GetParsedQuality( int* outLeapSecOffset, bool* outLeapSecPen
 	*outIsRealiable = true;
 
 	const uint8_t accuracyCode = 0x0F & TimeQuality;
-	if( accuracyCode == 0 ) 
+	if( accuracyCode == 0 )
 		*outTimeClockMaxErrorSec = 0.0f;
 	else if( accuracyCode > 0 && accuracyCode < 0xF )
 		*outTimeClockMaxErrorSec = powf(10, -(float)accuracyCode);
@@ -124,7 +124,7 @@ C37118ContIdx C37118ContIdx::CreateAsFrameInSequence( int frameIdx, int numFrame
 		return C37118ContIdx(0);
 	else if( frameIdx + 1 < numFrames ) // One of many, but NOT the last one
 		return C37118ContIdx(frameIdx+1);
-	else 
+	else
 		return C37118ContIdx(0xFFFF); // Last frame
 }
 
@@ -157,7 +157,7 @@ uint8_t C37118PmuDataFrameStat::getDataError() const // BIT 15-14
 }
 
 bool C37118PmuDataFrameStat::getPmuSyncFlag() const // Bit 13
-{	
+{
 	return std::bitset<16>(m_raw).test(13);
 }
 
@@ -176,30 +176,30 @@ bool C37118PmuDataFrameStat::getConfigChangeFlag() const // Bit 10
 	return std::bitset<16>(m_raw).test(10);
 }
 
-bool C37118PmuDataFrameStat::getDataModifiedFlag() const // Bit 9 
+bool C37118PmuDataFrameStat::getDataModifiedFlag() const // Bit 9
 {
 	return std::bitset<16>(m_raw).test(9);
 }
 
 uint8_t C37118PmuDataFrameStat::getTimeQualityCode() const // Bit 6-8
 {
-	return (m_raw & 0x01C0) >> 6;	
+	return (m_raw & 0x01C0) >> 6;
 }
 
 uint8_t C37118PmuDataFrameStat::getUnlockTimeCode() const // Bit 4-5
 {
-	return (m_raw & 0x0030) >> 4;	
+	return (m_raw & 0x0030) >> 4;
 }
 
 uint8_t C37118PmuDataFrameStat::getTriggerReasonCode() const
 {
-	return (m_raw & 0x000F);	
+	return (m_raw & 0x000F);
 }
 
 
 // Setters
 void C37118PmuDataFrameStat::setDataErrorCode(uint8_t errCode) // Bit 14-15
-{	
+{
 	m_raw = (m_raw & ~(0x3 << 14)) | ((errCode & 0x3) << 14);
 }
 
@@ -229,7 +229,7 @@ void C37118PmuDataFrameStat::setDataModifiedFlag(bool isset) // Bit 9
 }
 
 void C37118PmuDataFrameStat::setTimeQualityCode(uint8_t code) // Bit 6-8
-{	
+{
 	m_raw = (m_raw & ~(0x7 << 6)) | ((code & 0x7) << 6);
 }
 
@@ -342,7 +342,7 @@ C37118PmuDataFrameAnalog C37118PmuDataFrameAnalog::CreateByFloat(float value)
 	ang.Value = value;
 	return ang;
 }
-		
+
 float C37118PmuDataFrameAnalog::getValueAsFloat() const
 {
 	return this->Value;
@@ -376,7 +376,7 @@ C37118PmuDataFrameDigitalHelper C37118PmuDataFrameDigitalHelper::CreateByUint16A
 }
 
 void C37118PmuDataFrameDigitalHelper::PushDigWord(uint16_t word)
-{	
+{
 	for( int i = 0; i < 16; ++i )
 		m_digValues.push_back( (word & (0x1 << i)) >> i );
 }

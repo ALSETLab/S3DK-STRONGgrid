@@ -1,7 +1,7 @@
 /*
 *  Strongrid.cpp Defines the exported functions for the DLL application.
 *
-*  Copyright (C) 2016 SmarTS Lab
+*  Copyright (C) 2017 Luigi Vanfretti
 *
 *  This file is part of StrongridDLL.
 *
@@ -50,8 +50,8 @@ static int s_pdcClientCursor = 0;
 static PdcClient* s_pdcClientMap[MAXIMUM_CONCURRENT_CLIENTS]; // maps: index -> PdcClient* [0 => no client]
 static std::vector<std::pair<int,int>> s_socketPollVector; // Maps: pseudopdcid, socket FD | only contains active clients
 
-BOOL APIENTRY DllMain( HANDLE hModule, 
-					  DWORD  msg, 
+BOOL APIENTRY DllMain( HANDLE hModule,
+					  DWORD  msg,
 					  LPVOID lpReserved)
 {
 	switch (msg)
@@ -112,7 +112,7 @@ STRONGRIDIEEEC37118DLL_API int connectPdc( char *ipAddress,  int32_t port, int32
 }
 
 bool PseudoPdcIdIsValidClient( int32_t pseudoPdcId )
-{	
+{
 	return !(pseudoPdcId > MAXIMUM_CONCURRENT_CLIENTS || pseudoPdcId <= 0 || s_pdcClientMap[pseudoPdcId] == 0);
 }
 
@@ -266,7 +266,7 @@ STRONGRIDIEEEC37118DLL_API int dllshutdown(void)
 }
 
 std::vector<int> CheckPortsForDataToRead(int  timeoutMs)
-{	
+{
 	// Copy the data into a temporary array to avoid blocking too long
 	MutexFragment mux(&s_clientMapLock);
 	const int arrayLength = s_socketPollVector.size();
@@ -281,7 +281,7 @@ std::vector<int> CheckPortsForDataToRead(int  timeoutMs)
 	mux.Finalize();
 
 	// Poll for data
-	int ret = WSAPoll(socketListenArray, arrayLength, timeoutMs);	
+	int ret = WSAPoll(socketListenArray, arrayLength, timeoutMs);
 
 	std::vector<int> output;
 	if( ret > 0 )
@@ -303,7 +303,7 @@ STRONGRIDIEEEC37118DLL_API int __cdecl pollPdcWithDataWaiting( int pseudoPdcIdAr
 	try {
 		// Get a list of all sockets available for reading
 		std::vector<int> readsockVec = CheckPortsForDataToRead(pollTimeoutMs);
-		
+
 		// Copy data from result to output arrray
 		for( int i = 0; i < readsockVec.size() && i < pseudoPdcIdArrayLength; ++i )
 			outPseudoPdcIdArr[i] = readsockVec[i];
@@ -348,7 +348,7 @@ TimeStatus GetClockStatus(const C37118FracSec& frac)
 STRONGRIDIEEEC37118DLL_API int getPdcConfig(pdcConfiguration* outCfg, int32_t pseudoPdcId)
 {
 	if( PseudoPdcIdIsValidClient(pseudoPdcId) == false) return 1;
-	
+
 	try {
 		const C37118PdcConfiguration& pdcCfg = s_pdcClientMap[pseudoPdcId]->GetPdcConfiguration();
 
@@ -369,7 +369,7 @@ STRONGRIDIEEEC37118DLL_API int getPdcConfig(pdcConfiguration* outCfg, int32_t ps
 STRONGRIDIEEEC37118DLL_API int getPdcConfig_Ver3(pdcConfiguration* outCfg, int32_t pseudoPdcId)
 {
 	if( PseudoPdcIdIsValidClient(pseudoPdcId) == false) return RETERR_UNKNOWN_ERR;
-	
+
 	try {
 		const C37118PdcConfiguration_Ver3& pdcCfg = s_pdcClientMap[pseudoPdcId]->GetPdcConfigurationVer3();
 
@@ -390,12 +390,12 @@ STRONGRIDIEEEC37118DLL_API int getPdcConfig_Ver3(pdcConfiguration* outCfg, int32
 STRONGRIDIEEEC37118DLL_API int getPmuConfiguration(pmuConfig* pmuconf, int32_t pseudoPdcId, int32_t pmuIndex)
 {
 	if( PseudoPdcIdIsValidClient(pseudoPdcId) == false) return RETERR_UNKNOWN_ERR;
-	
+
 	try {
 		const C37118PdcConfiguration& pdcCfg = s_pdcClientMap[pseudoPdcId]->GetPdcConfiguration();
 		const C37118PmuConfiguration& pmuCfg = pdcCfg.PMUs[pmuIndex];
 
-		pmuconf->pmuid = pmuCfg.IdCode;		
+		pmuconf->pmuid = pmuCfg.IdCode;
 		memset(pmuconf->stationname, 0, 256);
 		strncpy(pmuconf->stationname, pmuCfg.StationName.c_str(), min(pmuCfg.StationName.length(), 255) );
 		pmuconf->nominalFrequency = pmuCfg.NomFreqCode.GetAsFrequency();
@@ -414,12 +414,12 @@ STRONGRIDIEEEC37118DLL_API int getPmuConfiguration(pmuConfig* pmuconf, int32_t p
 STRONGRIDIEEEC37118DLL_API int getPmuConfiguration_Ver3(pmuConfig_Ver3* pmuconf, int32_t pseudoPdcId, int32_t pmuIndex)
 {
 	if( PseudoPdcIdIsValidClient(pseudoPdcId) == false) return RETERR_UNKNOWN_ERR;
-	
+
 	try {
 		const C37118PdcConfiguration_Ver3& pdcCfg = s_pdcClientMap[pseudoPdcId]->GetPdcConfigurationVer3();
 		const C37118PmuConfiguration_Ver3& pmuCfg = pdcCfg.PMUs[pmuIndex];
 
-		pmuconf->pmuid = pmuCfg.IdCode;		
+		pmuconf->pmuid = pmuCfg.IdCode;
 		memset(pmuconf->stationname, 0, 256);
 		strncpy(pmuconf->stationname, pmuCfg.StationName.c_str(), min(pmuCfg.StationName.length(), 255) );
 		pmuconf->nominalFrequency = pmuCfg.NomFreqCode.GetAsFrequency();
@@ -434,7 +434,7 @@ STRONGRIDIEEEC37118DLL_API int getPmuConfiguration_Ver3(pmuConfig_Ver3* pmuconf,
 		pmuconf->SVC_CLASS = pmuCfg.ServiceClass;
 		pmuconf->PhasorMeasurementWindow = pmuCfg.PhasorMeasurementWindow;
 		pmuconf->PhasorMeasurementGroupDelayMs = pmuCfg.PhasorMeasurementGroupDelayMs;
-		
+
 		for( int i = 0; i < 16; ++i )
 			pmuconf->globalPmuId[i] = pmuCfg.GlobalPmuId[i];
 
@@ -454,7 +454,7 @@ STRONGRIDIEEEC37118DLL_API int getPhasorConfig( phasorConfig* phasorCfg, int32_t
 		const C37118PdcConfiguration& pdcCfg = s_pdcClientMap[pseudoPdcId]->GetPdcConfiguration();
 		const C37118PmuConfiguration& pmuCfg = pdcCfg.PMUs[pmuIndex];
 		const C37118PhasorUnit& phUnit = pmuCfg.PhasorUnit[phasorIndex];
-				
+
 		memset( phasorCfg->name, 0, 256 );
 		strncpy(phasorCfg->name, pmuCfg.phasorChnNames[phasorIndex].c_str(), min(pmuCfg.phasorChnNames[phasorIndex].length(), 255) );
 		phasorCfg->type = phUnit.Type;
@@ -478,7 +478,7 @@ STRONGRIDIEEEC37118DLL_API int getPhasorConfig_Ver3( phasorConfig_Ver3* phasorCf
 		const C37118PdcConfiguration_Ver3& pdcCfg = s_pdcClientMap[pseudoPdcId]->GetPdcConfigurationVer3();
 		const C37118PmuConfiguration_Ver3& pmuCfg = pdcCfg.PMUs[pmuIndex];
 		const C37118PhasorScale_Ver3& phUnit = pmuCfg.PhasorScales[phasorIndex];
-				
+
 		memset( phasorCfg->name, 0, 256 );
 		strncpy(phasorCfg->name, pmuCfg.phasorChnNames[phasorIndex].c_str(), min(pmuCfg.phasorChnNames[phasorIndex].length(), 255) );
 		phasorCfg->type = phUnit.VoltOrCurrent;
@@ -551,9 +551,9 @@ STRONGRIDIEEEC37118DLL_API int getDigitalConfig(  digitalConfig* digitalCfg, int
 		const C37118PdcConfiguration& pdcCfg = s_pdcClientMap[pseudoPdcId]->GetPdcConfiguration();
 		const C37118PmuConfiguration& pmuCfg = pdcCfg.PMUs[pmuIndex];
 		const C37118DigitalUnit& digUnit = pmuCfg.DigitalUnit[unitWordIdx];
-			
+
 		memset(digitalCfg->name, 0, 256);
-		strncpy(digitalCfg->name, pmuCfg.digitalChnNames[digitalIndex].c_str(), min(pmuCfg.digitalChnNames[digitalIndex].length(), 255) ); 
+		strncpy(digitalCfg->name, pmuCfg.digitalChnNames[digitalIndex].c_str(), min(pmuCfg.digitalChnNames[digitalIndex].length(), 255) );
 
 		bool normBit, validBit;
 		digUnit.BitAtIdx(digitalIndex % 16, &normBit, &validBit);
@@ -577,9 +577,9 @@ STRONGRIDIEEEC37118DLL_API int getDigitalConfig_Ver3(  digitalConfig* digitalCfg
 		const C37118PdcConfiguration_Ver3& pdcCfg = s_pdcClientMap[pseudoPdcId]->GetPdcConfigurationVer3();
 		const C37118PmuConfiguration_Ver3& pmuCfg = pdcCfg.PMUs[pmuIndex];
 		const C37118DigitalUnit& digUnit = pmuCfg.DigitalUnits[unitWordIdx];
-			
+
 		memset(digitalCfg->name, 0, 256);
-		strncpy(digitalCfg->name, pmuCfg.digitalChnNames[digitalIndex].c_str(), min(pmuCfg.digitalChnNames[digitalIndex].length(), 255) ); 
+		strncpy(digitalCfg->name, pmuCfg.digitalChnNames[digitalIndex].c_str(), min(pmuCfg.digitalChnNames[digitalIndex].length(), 255) );
 
 		bool normBit, validBit;
 		digUnit.BitAtIdx(digitalIndex % 16, &normBit, &validBit);
@@ -595,7 +595,7 @@ STRONGRIDIEEEC37118DLL_API int getDigitalConfig_Ver3(  digitalConfig* digitalCfg
 }
 
 STRONGRIDIEEEC37118DLL_API int getPdcRealData(pdcDataFrame* rd, int32_t pseudoPdcId)
-{	
+{
 	if( PseudoPdcIdIsValidClient(pseudoPdcId) == false) return RETERR_UNKNOWN_ERR;
 
 	try {
@@ -604,7 +604,7 @@ STRONGRIDIEEEC37118DLL_API int getPdcRealData(pdcDataFrame* rd, int32_t pseudoPd
 
 		// PDC portion of realdata
 		rd->TimeQuality = GetClockStatus(dataframe.HeaderCommon.FracSec);
-		rd->Timestamp = GetParsedTimestamp(dataframe.HeaderCommon.SOC, dataframe.HeaderCommon.FracSec.FractionOfSecond, decodeInfo.timebase.TimeBase, &rd->SecondOfCentury);	
+		rd->Timestamp = GetParsedTimestamp(dataframe.HeaderCommon.SOC, dataframe.HeaderCommon.FracSec.FractionOfSecond, decodeInfo.timebase.TimeBase, &rd->SecondOfCentury);
 		rd->NumPmuInDataFrame = dataframe.pmuDataFrame.size();
 
 		return RETERR_OK;
@@ -646,7 +646,7 @@ STRONGRIDIEEEC37118DLL_API int getPmuRealData(pmuDataFrame* rd, PmuStatus* rdsts
 			rd->phasorValueReal[i] = dataframe.pmuDataFrame[pmuIndex].PhasorValues[i].Real;
 			rd->phasorValueImaginary[i] = dataframe.pmuDataFrame[pmuIndex].PhasorValues[i].Imag;
 		}
-		
+
 		// Analog
 		rd->AnalogArrayLength = pmuDecodeInfo.numAnalogs;
 		for( int i = 0; i < dataframe.pmuDataFrame[pmuIndex].AnalogValues.size(); ++i )
@@ -656,7 +656,7 @@ STRONGRIDIEEEC37118DLL_API int getPmuRealData(pmuDataFrame* rd, PmuStatus* rdsts
 		rd->DigitalArrayLength = pmuDecodeInfo.numDigitals;
 		for( int i = 0; i < dataframe.pmuDataFrame[pmuIndex].DigitalValues.size(); ++i )
 			rd->digitalValueArr[i] = dataframe.pmuDataFrame[pmuIndex].DigitalValues[i] ? 1 : 0;
-		
+
 		return RETERR_OK;
 	}
 	catch( ... )
@@ -725,7 +725,7 @@ STRONGRIDIEEEC37118DLL_API int __cdecl getPmuRealDataLabview(noArraysPmuDataFram
 			phasorValueReal[i] = dataframe.pmuDataFrame[pmuIndex].PhasorValues[i].Real;
 			phasorValueImaginary[i] = dataframe.pmuDataFrame[pmuIndex].PhasorValues[i].Imag;
 		}
-		
+
 		// Analog
 		for( int i = 0; i < dataframe.pmuDataFrame[pmuIndex].AnalogValues.size(); ++i )
 			analogValueArr[i] = dataframe.pmuDataFrame[pmuIndex].AnalogValues[i].getValueAsFloat();
@@ -733,7 +733,7 @@ STRONGRIDIEEEC37118DLL_API int __cdecl getPmuRealDataLabview(noArraysPmuDataFram
 		// Digital
 		for( int i = 0; i < dataframe.pmuDataFrame[pmuIndex].DigitalValues.size(); ++i )
 			digitalValueArr[i] = dataframe.pmuDataFrame[pmuIndex].DigitalValues[i] ? 1 : 0;
-		
+
 		return RETERR_OK;
 	}
 	catch( ... )
@@ -768,7 +768,7 @@ STRONGRIDIEEEC37118DLL_API int __cdecl getPhasorConfigLabview(noArraysPhasorConf
 
 	return retval;
 }
- 
+
 STRONGRIDIEEEC37118DLL_API int __cdecl getAnalogConfigLabview(noArraysAnalogConfig *analogCfg, char* name, int32_t pseudoPdcId, int32_t pmuIndex, int32_t analogIndex)
 {
 	analogConfig tmpCfg; tmpCfg.name = name;
@@ -791,6 +791,3 @@ STRONGRIDIEEEC37118DLL_API int __cdecl getDigitalConfigLabview(noArraysDigitalCo
 
 	return retval;
 }
-
-
-

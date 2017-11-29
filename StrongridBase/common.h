@@ -1,7 +1,7 @@
 /*
 *  common.h
 *
-*  Copyright (C) 2016 SmarTS Lab
+*  Copyright (C) 2017 Luigi Vanfretti
 *
 *  This file is part of StrongridDLL.
 *
@@ -44,7 +44,7 @@ namespace strongridbase
 		std::string m_error;
 	};
 
-	
+
 	class SocketException : public Exception
 	{
 	public:

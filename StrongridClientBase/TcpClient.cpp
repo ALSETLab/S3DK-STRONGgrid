@@ -1,7 +1,7 @@
 /*
 *  TcpClient.cpp
 *
-*  Copyright (C) 2016 SmarTS Lab
+*  Copyright (C) 2017 Luigi Vanfretti
 *
 *  This file is part of StrongridDLL.
 *
@@ -50,7 +50,7 @@ int TcpClient::GetSocketDescriptor() const
 
 void TcpClient::Connect()
 {
-	int sockfd;  
+	int sockfd;
     addrinfo hints, *servinfo, *p;
     int rv;
 
@@ -61,7 +61,7 @@ void TcpClient::Connect()
 
 
 	std::stringstream ss; ss << m_port;
-    if ((rv = getaddrinfo(m_ipAddr.c_str(), ss.str().c_str(), &hints, &servinfo)) != 0) 
+    if ((rv = getaddrinfo(m_ipAddr.c_str(), ss.str().c_str(), &hints, &servinfo)) != 0)
         throw Exception("Unable to get address information.");
 
     // loop through all the results and connect to the first we can
@@ -81,7 +81,7 @@ void TcpClient::Connect()
         break;
     }
 
-    if (p == NULL)        
+    if (p == NULL)
         throw Exception("Failed to connect to host");
 
     freeaddrinfo(servinfo); // all done with this structure
@@ -101,7 +101,7 @@ int TcpClient::Send( const char* data, int length )
 	while( bytesSent < length )
 	{
 		int retVal = send(m_sockfd, data + bytesSent, length - bytesSent, 0 );
-		if( retVal <= 0 ) 
+		if( retVal <= 0 )
 		{
 			Close();
 			throw Exception("Unable to send data!");
