@@ -19,7 +19,7 @@ The ".." at the end of the command points to the parent directory.
 It tells cmake where to find the main build script file (CMakeLists.txt).
 
 ### Documentation
-The DLL Methods are documented in the [[API Documentation|/docs/API_Documentation]]
+The DLL Methods are documented in the [API Documentation](/docs/API_Documentation.md)
 
 ## License Info
 
