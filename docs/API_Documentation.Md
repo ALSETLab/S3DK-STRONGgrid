@@ -10,7 +10,7 @@ This document gives the Strongrid DLL users an overview of methods and informati
 
 ### Strongrid IEEE C37.118 DLL Interface overview
 
- ![DLL Architecture](/img/STRONgrid-DLL-Architecture.png)
+ ![DLL Architecture](/docs/img/STRONgrid-DLL-Architecture.png)
 
 The Strongrid IEEE C37.118 DLL interface connects the client application to the PMUs/PDCs through the IEEE C37.118 protocol.  In first version of the Strongrid DLL  only the DLL API interface is implemented, while the other interfaces are prepared in the code.
 
@@ -124,7 +124,7 @@ Note that all char\* arrays must be 256 bytes, or longer
 ## Flow charts
 
 ### Representing one thread per PMU/PDC
-![Flowchart 1](/img/Flowchart-1.png)
+![Flowchart 1](/docs/img/Flowchart-1.png)
 
 ### Representing the thread pool with read Queue
-![Flowchart 1](/img/Flowchart-2.png)
+![Flowchart 1](/docs/img/Flowchart-2.png)
