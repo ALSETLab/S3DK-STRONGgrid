@@ -1,5 +1,10 @@
 # Strongrid DLL
 
+## Use our Software? Cite our this paper!
+If you use our software, please cite the following paper:
+Maxime Baudette, Seyed Reza Firouzi, Luigi Vanfretti,"The STRONgrid library: A modular and extensible software library for IEEE C37.118.2 compliant synchrophasor data mediation," SoftwareX, Volume 7, 2018, Pages 281-286, ISSN 2352-7110,
+[https://doi.org/10.1016/j.softx.2018.08.001.](http://www.sciencedirect.com/science/article/pii/S2352711018301705)
+
 ## Compile the DLL
 The repository includes the necessary files to build a **Visual Studio** solution to generate the `StrongridDLL.dll` file.
 The setup requires [**cmake**](https://cmake.org/download/) on the host computer.
